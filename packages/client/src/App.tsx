@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useEffect, useState } from 'react';
+import './App.css';
 import { Button } from './components/ui/button';
 
 function App() {
   const [message, setMessage] = useState('');
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch('/api/hello')
-      .then(res => res.json()) 
-      .then(data => setMessage(data.message));
+      .then((res) => res.json())
+      .then((data) => setMessage(data.message));
   }, []);
 
   return (
     <>
-      <p className='font-bold'>{message}</p>
+      <p className="font-bold">{message}</p>
       <Button>Click me</Button>
     </>
-
-  )
+  );
 }
 
-export default App
+export default App;
