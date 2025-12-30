@@ -3,6 +3,7 @@ import type { Request, Response } from 'express';
 import dotenv from 'dotenv';
 import OpenAI from 'openai';
 import z from 'zod';
+import { conversationRepository } from './repositories/conversation.repository';
 
 // Store all variables in .env as Environment Variables
 dotenv.config();
@@ -27,9 +28,7 @@ app.get('/api/hello', (req: Request, res: Response) => {
     res.json({message: "Hello"})
 });
 
-// build memory for this chatbox
-// converstionId -> lastResponseId in that conversation
-const conversations = new Map<string, string>();
+
 
 // input validation (chat)
 const chatSchema = z.object({
@@ -54,11 +53,11 @@ app.post('/api/chat', async (req: Request, res: Response) => {
             input: prompt,
             temperature: 0.2, // decide how logic/creative the answer is (0.2=logic, 1.0=creative)
             max_output_tokens: 100, // tokens
-            previous_response_id: conversations.get(conversationId)
+            previous_response_id: conversationRepository.getLastResponseId(conversationId)
         })
         
         // update the chatbox's memory
-        conversations.set(conversationId, response.id);
+        conversationRepository.setLastResponseId(conversationId, response.id);
         
         // send the answer to user
         res.json({message: response.output_text})
