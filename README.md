@@ -1,5 +1,9 @@
 # moshaipoweredapp
 
+This project was created using `bun init` in bun v1.3.4. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+
+Before running the app, we need to set up `.env` file and install dependencies.
+
 To install dependencies:
 
 ```bash
@@ -11,8 +15,6 @@ To run:
 ```bash
 bun run dev
 ```
-
-This project was created using `bun init` in bun v1.3.4. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
 
 ## Frontend
 
