@@ -20,7 +20,7 @@ export const chatService = {
             model: 'gpt-4o-mini',
             input: prompt,
             temperature: 0.2, // decide how logic/creative the answer is (0.2=logic, 1.0=creative)
-            max_output_tokens: 100, // tokens
+            max_output_tokens: 200, // tokens
             previous_response_id: conversationRepository.getLastResponseId(conversationId)
         })
         

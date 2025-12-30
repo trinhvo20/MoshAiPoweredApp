@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
 import { Button } from './ui/button';
 import { FaArrowUp } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
@@ -56,7 +57,7 @@ const ChatBot = () => {
             key={index}
             className={`px-3 py-1 rounded-xl ${message.role === 'user' ? 'bg-blue-400 text-white self-end' : 'bg-gray-100 text-black self-start'}`}
           >
-            {message.content}
+            <ReactMarkdown>{message.content}</ReactMarkdown>
           </p>
         ))}
       </div>
