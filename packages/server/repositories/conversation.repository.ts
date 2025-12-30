@@ -2,6 +2,8 @@
 // converstionId -> lastResponseId in that conversation
 const conversations = new Map<string, string>();
 
+
+// Export public interface
 export const conversationRepository = {
     getLastResponseId(conversationId: string){
         return conversations.get(conversationId);
