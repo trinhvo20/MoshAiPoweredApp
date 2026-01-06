@@ -21,9 +21,10 @@ export const chatController = {
             // grab the user's chat
             const {prompt, conversationId} = req.body; 
             
+            // get the response from AI
             const response = await chatService.sendMessage(prompt, conversationId);
             
-            // send the answer to user
+            // send the answer (AI response) to user
             res.json({message: response.message})
         } 
         catch (err) {

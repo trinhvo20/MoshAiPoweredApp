@@ -20,7 +20,7 @@ type Message = {
 
 const ChatBot = () => {
   const conversationId = useRef(crypto.randomUUID());
-  const formRef = useRef<HTMLFormElement | null>(null);
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isBotTyping, setIsBotTyping] = useState(false);
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
@@ -34,7 +34,7 @@ const ChatBot = () => {
     ]);
 
     setIsBotTyping(true);
-    reset(); // clear the chatbox
+    reset({ prompt: '' }); // clear the chatbox
 
     // send user's chat to backend
     const { data } = await axios.post<ChatResponse>('/api/chat', {
@@ -55,13 +55,15 @@ const ChatBot = () => {
     }
   };
 
-  // Handle auto scroll to form (latest message)
+  // Handle auto scroll to the latest message
   useEffect(() => {
-    formRef.current?.scrollIntoView({ behavior: 'smooth' });
+    lastMessageRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   // Handle copy message properly (trim whitespace from html)
-  const onCopyMessage = (e: React.ClipboardEvent<HTMLParagraphElement>): void => {
+  const onCopyMessage = (
+    e: React.ClipboardEvent<HTMLParagraphElement>
+  ): void => {
     const selection = window.getSelection()?.toString().trim();
     if (selection) {
       e.preventDefault();
@@ -70,16 +72,18 @@ const ChatBot = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-col gap-3 mb-10">
+    <div className="flex flex-col h-full">
+      {/* Old Messages */}
+      <div className="flex flex-col flex-1 gap-3 mb-10 overflow-y-auto">
         {messages.map((message, index) => (
-          <p
+          <div
             key={index}
             onCopy={onCopyMessage}
+            ref={index === messages.length - 1 ? lastMessageRef : null} // set the ref to the last message
             className={`px-3 py-1 rounded-xl ${message.role === 'user' ? 'bg-rose-400 text-white self-end' : 'bg-gray-100 text-black self-start'}`}
           >
             <ReactMarkdown>{message.content}</ReactMarkdown>
-          </p>
+          </div>
         ))}
         {/* show bot typing animation */}
         {isBotTyping && (
@@ -90,8 +94,9 @@ const ChatBot = () => {
           </div>
         )}
       </div>
+
+      {/* Chatbox */}
       <form
-        ref={formRef}
         onSubmit={handleSubmit(onSubmit)}
         onKeyDown={onKeyDown}
         className="flex flex-col gap-2 items-end border-2 rounded-3xl p-4"
@@ -101,6 +106,7 @@ const ChatBot = () => {
             required: true,
             validate: (data) => data.trim().length > 0,
           })}
+          autoFocus // set cursor in the chatbox when page first load
           className="w-full border-0 focus:outline-0 resize-none"
           placeholder="Ask anything"
           maxLength={1000}
