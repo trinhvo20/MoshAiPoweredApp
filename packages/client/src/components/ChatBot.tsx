@@ -23,28 +23,36 @@ const ChatBot = () => {
   const lastMessageRef = useRef<HTMLDivElement | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [isBotTyping, setIsBotTyping] = useState(false);
+  const [error, setError] = useState('');
   const { register, handleSubmit, reset, formState } = useForm<FormData>();
 
   // Hanlde Click submit form
   const onSubmit = async (formData: FormData) => {
-    // formData.prompt = user's message
-    setMessages((prev) => [
-      ...prev,
-      { content: formData.prompt, role: 'user' },
-    ]);
+    try {
+      // formData.prompt = user's message
+      setMessages((prev) => [
+        ...prev,
+        { content: formData.prompt, role: 'user' },
+      ]);
 
-    setIsBotTyping(true);
-    reset({ prompt: '' }); // clear the chatbox
+      setIsBotTyping(true);
+      setError('');
+      reset({ prompt: '' }); // clear the chatbox
 
-    // send user's chat to backend
-    const { data } = await axios.post<ChatResponse>('/api/chat', {
-      prompt: formData.prompt,
-      conversationId: conversationId.current,
-    });
-    console.log(data);
+      // send user's chat to backend
+      const { data } = await axios.post<ChatResponse>('/api/chat', {
+        prompt: formData.prompt,
+        conversationId: conversationId.current,
+      });
+      console.log(data);
 
-    setMessages((prev) => [...prev, { content: data.message, role: 'bot' }]);
-    setIsBotTyping(false);
+      setMessages((prev) => [...prev, { content: data.message, role: 'bot' }]);
+    } catch (error) {
+      console.error(error);
+      setError('Something went wrong!');
+    } finally {
+      setIsBotTyping(false);
+    }
   };
 
   // Handle Enter submit form
@@ -93,6 +101,8 @@ const ChatBot = () => {
             <div className="w-2 h-2 rounded-full bg-gray-800 animate-pulse [animation-delay:0.4s]"></div>
           </div>
         )}
+        {/* Error */}
+        {error && <p className="text-red-500">{error}</p>}
       </div>
 
       {/* Chatbox */}
