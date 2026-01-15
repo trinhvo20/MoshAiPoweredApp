@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import ChatBot from './components/ChatBot';
+import ChatBot from './components/chat/ChatBot';
 
 function App() {
   return (
