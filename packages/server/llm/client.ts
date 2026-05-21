@@ -1,6 +1,7 @@
 import OpenAI from "openai";    // ChatGPT model
 import { InferenceClient } from "@huggingface/inference";   // HuggingFace model
 import summarizePrompt from '../prompts/summarize-reviews-hg.txt';
+import {Ollama} from 'ollama';
 
 // Get OpenAI through API key
 const openAIClient = new OpenAI({
@@ -8,6 +9,8 @@ const openAIClient = new OpenAI({
 });
 
 const inferenceClient = new InferenceClient(process.env.HUGGING_FACE_TOKEN);
+
+const ollamaClient = new Ollama();
 
 type GenerateTextOptions = {
     model?: string;
@@ -62,7 +65,23 @@ export const llmClient = {
                 },
             ],
         });
-
         return chatCompletion.choices[0]?.message.content || '';
+    },
+
+    async summarizeReviewsByOllama(reviews: string) {
+        const response = await ollamaClient.chat({
+            model: "tinyllama",
+            messages: [
+                {
+                    role: "system",
+                    content: summarizePrompt,
+                },
+                {
+                    role: "user",
+                    content: reviews,
+                },
+            ],
+        });
+        return response.message.content;
     }
 };

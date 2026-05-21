@@ -36,7 +36,7 @@ It uses **express** as server.
 
 It runs on `http://localhost:3000`
 
-# Prisma
+## Prisma
 
 Use [Prisma v7](https://www.prisma.io/) as our Postgres serverless database and as a tool to migrate database ( migrate = connect code to database).
 
@@ -45,3 +45,15 @@ In **\packages\server** path, run:
 ```
 bunx prisma migrate dev
 ```
+
+## AI Models
+
+There are 2 mini-projects in this solution:
+1. Theme park customer support AI chat.
+    * We use [OpenAI](https://platform.openai.com) as our AI models.
+2. Summarize products reviews using AI.
+    * At first, we use [OpenAI](https://platform.openai.com) to handle the summary job.
+    * Later, we choose to use open-source AI models from [HuggingFace](https://huggingface.co/), because it is free.
+
+To run AI models locally, we use a tool called [Ollama](https://ollama.com/).
+* You have to install Ollama in your machine and install it in your app before you can use it in your app.

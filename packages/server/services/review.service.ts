@@ -17,6 +17,7 @@ export const reviewService = {
         const joinedReviews = reviews.map(review => review.content).join('\n\n');
         const prompt = template.replace('{{reviews}}', joinedReviews);
         
+        // ==========================================================================
         // OpenAI model
         // // Send last 10 reviews to AI to summary
         // const response = await llmClient.generateText({
@@ -33,8 +34,15 @@ export const reviewService = {
         
         // return summary;
         
+        // ==========================================================================
         // Hugging Face model
-        const summary = await llmClient.summarizeReviews(joinedReviews)
+        // const summary = await llmClient.summarizeReviews(joinedReviews)
+        // await reviewRepository.storeSummary(productId, summary);
+        // return summary;
+        
+        // ==========================================================================
+        // Using Ollama to call Hugging Face model locally
+        const summary = await llmClient.summarizeReviewsByOllama(joinedReviews)
         await reviewRepository.storeSummary(productId, summary);
         return summary;
     },
