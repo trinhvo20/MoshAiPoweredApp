@@ -34,7 +34,7 @@ export const reviewService = {
         // return summary;
         
         // Hugging Face model
-        const summary = await llmClient.summarizeText(joinedReviews)
+        const summary = await llmClient.summarizeReviews(joinedReviews)
         await reviewRepository.storeSummary(productId, summary);
         return summary;
     },
